@@ -1,5 +1,6 @@
 import pygame
 import sys
+import subprocess
 
 # Инициализация Pygame
 pygame.init()
@@ -63,6 +64,14 @@ while running:
             mouse_pos = event.pos
             if exit_button.rect.collidepoint(mouse_pos):  # Если нажали на кнопку выход то выход)
                 running = False
+            if score_button.rect.collidepoint(mouse_pos):
+                running = False
+                subprocess.call(['python', "../../score_board/files/score_window.py"])
+                break
+            if start_button.rect.collidepoint(mouse_pos):
+                running = False
+                subprocess.call(['python', "../../game_window/files/game_window.py"])
+                break
 
     # Очистка экрана
     screen.blit(change_background_color(), (0, 0))
