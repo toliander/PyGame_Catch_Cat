@@ -1,9 +1,15 @@
 import pygame
 import sys
 import subprocess
+import os
 
 # Инициализация Pygame
 pygame.init()
+
+# Если вызвали из другой папки меняем рабочую директорию
+current_dir = os.getcwd()
+new_dir = '../../start_window/files'
+os.chdir(new_dir)
 
 # Определение размеров окна
 WINDOW_WIDTH = 600
@@ -64,23 +70,25 @@ while running:
             mouse_pos = event.pos
             if exit_button.rect.collidepoint(mouse_pos):  # Если нажали на кнопку выход то выход)
                 running = False
+                pygame.quit()
             if score_button.rect.collidepoint(mouse_pos):
                 running = False
+                pygame.quit()
                 subprocess.call(['python', "../../score_board/files/score_window.py"])
-                break
             if start_button.rect.collidepoint(mouse_pos):
                 running = False
+                pygame.quit()
                 subprocess.call(['python', "../../game_window/files/game_window.py"])
-                break
 
-    # Очистка экрана
-    screen.blit(change_background_color(), (0, 0))
+    if running:
+        # Очистка экрана
+        screen.blit(change_background_color(), (0, 0))
 
-    # Отображение кнопок
-    button_group.draw(screen)
+        # Отображение кнопок
+        button_group.draw(screen)
 
-    # Обновление экрана
-    pygame.display.flip()
+        # Обновление экрана
+        pygame.display.flip()
 
 # Завершение работы Pygame
 pygame.quit()

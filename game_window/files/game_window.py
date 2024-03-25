@@ -25,6 +25,9 @@ class Game():
         self.lifes = 3
         self.push = True
 
+    def new_game(self):
+        pass
+
 
 # Класс для статических изображений наследуется от основного окна
 class StaticImage(pygame.sprite.Sprite):
