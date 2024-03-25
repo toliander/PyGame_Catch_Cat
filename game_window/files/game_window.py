@@ -2,6 +2,7 @@ import pygame
 import sys
 import random
 import os
+import subprocess
 
 # Инициализация Pygame
 pygame.init()
@@ -26,7 +27,9 @@ class Game():
         self.push = True
 
     def new_game(self):
-        pass
+        self.score = 0
+        self.lifes = 3
+        self.push = True
 
 
 # Класс для статических изображений наследуется от основного окна
@@ -118,8 +121,12 @@ right_rail_low_tr = [(WINDOW_WIDTH - 50, WINDOW_HEIGHT - SIZE_Y), (WINDOW_WIDTH 
                      (WINDOW_WIDTH - 150, WINDOW_HEIGHT - SIZE_Y), (WINDOW_WIDTH - 200, WINDOW_HEIGHT - SIZE_Y),
                      (WINDOW_WIDTH - 250, WINDOW_HEIGHT - SIZE_Y), (WINDOW_WIDTH - 300, WINDOW_HEIGHT - SIZE_Y)]
 
-# Добавление направляющих в группу спрайтов
-for elem in (left_rail_up, right_rail_up, left_rail_low, right_rail_low):
+# Загружаем кнопки новой игры и возврата
+new_game_button = StaticImage('../static/new.png', 525, 0, 100, 70)
+back_button = StaticImage('../static/back.png', 650, 0, 100, 70)
+
+# Добавление направляющих и кнопок в группу спрайтов
+for elem in (left_rail_up, right_rail_up, left_rail_low, right_rail_low, new_game_button, back_button):
     static_group.add(elem)
 # Запаковываем траектории для распределения по котам
 tracks = [(left_rail_up_tr, 1), (left_rail_low_tr, 2), (right_rail_up_tr, 3), (right_rail_low_tr, 4)]
@@ -143,7 +150,7 @@ background = pygame.transform.scale(background, (WINDOW_WIDTH, WINDOW_HEIGHT))
 animation_timer = pygame.time.get_ticks()
 generation_timer = pygame.time.get_ticks()
 # Установка шрифта
-font = pygame.font.SysFont(None, 48)
+font = pygame.font.SysFont('arial', 48)
 
 # Начальное значение счета
 score = 0
@@ -156,6 +163,14 @@ while running:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = event.pos
+            if new_game_button.rect.collidepoint(mouse_pos):
+                game.new_game()
+                for elem in dynamic_group:
+                    dynamic_group.remove(elem)
+            if back_button.rect.collidepoint(mouse_pos):
+                running = False
+                pygame.quit()
+                subprocess.call(['python', "../../start_window/files/start_window.py"])
         elif event.type == pygame.KEYDOWN:
             hero.change_pos(event)
     if game.lifes > 0:  # пока живы играем
